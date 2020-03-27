@@ -4,7 +4,7 @@ public class Price {
     public int rubles;
     public int pennies;
     public Price(int r , int p){
-        if (p<100 && r>=0){
+        if (p<100 && r>=0 && p>=0){
             this.pennies=p;
             this.rubles = r;
         }else{

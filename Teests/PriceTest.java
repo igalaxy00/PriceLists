@@ -21,7 +21,6 @@ public class PriceTest {
         assertEquals(testItem.getName(),"tItem");
         testItem.newName("newName");
         assertEquals(testItem.getName(),"newName");
-        Item pen = new Item("Pen", new Price(30, 90));
         Price changePrice = new Price(33,10);
         testItem.newPrice(changePrice);
         assertEquals(testItem.getPrice(),changePrice);
@@ -34,13 +33,16 @@ public class PriceTest {
         Item item2 = new Item("item2", new Price(3, 33));
         Item item3 = new Item("item3", new Price(6, 55));
         market.addItem(123,item1);
-        assertThrows(IllegalArgumentException.class, () ->market.addItem(123,item2));
+        assertThrows(NullPointerException.class, () ->market.addItem(123,item2));
         market.removeItem(123);
-        assertThrows(IllegalArgumentException.class, () ->market.removeItem(6666));
+        assertThrows(NullPointerException.class, () ->market.removeItem(6666));
         market.addItem(1,item1);
         market.addItem(12,item2);
         market.addItem(123,item3);
         Price a = market.priceOfItems(1,2);
+        Price b = market.priceOfItems(12,4);
+        assertEquals(b.rubles , 13);
+        assertEquals(b.pennies , 32);
         assertEquals(a.rubles , 4);
         assertEquals(a.pennies , 44);
         assertTrue(market.removeItem(123));
