@@ -1,53 +1,63 @@
 import LikeAMarket.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-public class PriceTest {
+ class PriceTest {
     @Test
-    public void TestPrices() {
+     void TestPrices() {
+        PriceList market = new PriceList();
         Item wrongR = new Item("wrongR", new Price(2, 22));
-        assertThrows(NullPointerException.class, () ->wrongR.newPrice(new Price(-1, 9)));
+        assertThrows(NullPointerException.class, () ->wrongR.setPrice(new Price(-1, 9)));
         Item wrongP = new Item("wrongP", new Price(2, 22));
-        assertThrows(NullPointerException.class, () ->wrongP.newPrice(new Price(1, 666666)));
+        assertThrows(NullPointerException.class, () ->wrongP.setPrice(new Price(1, 666666)));
         Item pTest = new Item("pTest", new Price(6, 66));
-        assertEquals(Price.getPennies(pTest),66);
-        assertEquals(Price.getRubles(pTest),6);
+        assertEquals(market.getPennies(pTest),66);
+        assertEquals(market.getRubles(pTest),6);
     }
     @Test
-    public void ItemTest() {
+     void ItemTest() {
         Item testItem = new Item("tItem", new Price(2, 22));
-        assertEquals(testItem.getPrice().pennies,22);
-        assertEquals(testItem.getPrice().rubles,2);
+        assertEquals(testItem.getPrice().getPennies(),22);
+        assertEquals(testItem.getPrice().getRubles(),2);
         assertEquals(testItem.getName(),"tItem");
-        testItem.newName("newName");
+        testItem.setName("newName");
         assertEquals(testItem.getName(),"newName");
         Price changePrice = new Price(33,10);
-        testItem.newPrice(changePrice);
+        testItem.setPrice(changePrice);
         assertEquals(testItem.getPrice(),changePrice);
     }
     @Test
-    public void PriceListTest() {
+     void PriceListTest() {
         PriceList market = new PriceList();
         assertTrue(market.isEmpty());
         Item item1 = new Item("item1", new Price(2, 22));
         Item item2 = new Item("item2", new Price(3, 33));
         Item item3 = new Item("item3", new Price(6, 55));
+        Item originItem = new Item("originItem", new Price(6, 55));
+        market.addItem(12312123,originItem);
+        market.renameFromMarket(12312123,"newName");
+       assertEquals(originItem.getName(),"newName");
+       market.rePriceFromMarket(12312123,new Price(3, 33));
         market.addItem(123,item1);
-        assertThrows(NullPointerException.class, () ->market.addItem(123,item2));
+        assertFalse(market.addItem(123,item2));
         market.removeItem(123);
-        assertThrows(NullPointerException.class, () ->market.removeItem(6666));
+        assertFalse(market.removeItem(6666));
         market.addItem(1,item1);
         market.addItem(12,item2);
         market.addItem(123,item3);
-        Price a = market.priceOfItems(1,2);
-        Price b = market.priceOfItems(12,4);
-        assertEquals(b.rubles , 13);
-        assertEquals(b.pennies , 32);
-        assertEquals(a.rubles , 4);
-        assertEquals(a.pennies , 44);
-        assertTrue(market.removeItem(123));
-        assertTrue(market.addItem(123,item3));
-        assertTrue(market.removeItem(123));
+        Price[] a = market.priceOfItems(new int[]{1}, new int[]{2});
+        Price[] b = market.priceOfItems(new int[]{12}, new int[]{4});
+        assertEquals(b[0].getRubles() , 13);
+        assertEquals(b[0].getPennies() , 32);
+        assertEquals(a[0].getRubles() , 4);
+        assertEquals(a[0].getPennies() , 44);
+        Price[] manyItems = market.priceOfItems(new int[]{1,12}, new int[]{2,2});
+        assertEquals(manyItems[0].getRubles(),4);
+        assertEquals(manyItems[0].getPennies(),44);
+        assertEquals(manyItems[1].getRubles(),6);
+        assertEquals(manyItems[1].getPennies(),66);
+        market.removeItem(123);
+        market.addItem(123,item3);
+        market.removeItem(123);
         market.clearItems();
         assertTrue(market.isEmpty());
     }
