@@ -3,8 +3,8 @@ package LikeAMarket;
 import java.util.Objects;
 
 public class Price {
-     int rubles;
-     int pennies;
+     private int rubles;
+     private int pennies;
     public Price(int rubles , int pennies){
         if (pennies<100 && rubles>=0 && pennies>=0){
             this.pennies=pennies;

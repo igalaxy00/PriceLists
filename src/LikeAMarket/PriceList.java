@@ -34,22 +34,21 @@ public class PriceList {
         return true;
     }
 
-    public Price[] priceOfItems(int[] code , int[] amount){
-        Price[] price = new Price[code.length];
+    public Price priceOfItems(int[] code , int[] amount){
+        int all = 0 ;
         for (int i = 0; i < code.length; i++) {
             if (!priceList.containsKey(code[i])) throw new IllegalArgumentException();
-
-            int current = (priceList.get(code[i]).getPrice().rubles * 100 + priceList.get(code[i]).getPrice().pennies) * amount[i];
-            price[i]=new Price( current/100 ,current%100 );
+            int current = (priceList.get(code[i]).getPrice().getRubles() * 100 + priceList.get(code[i]).getPrice().getPennies()) * amount[i];
+            all+=current;
         }
-        return price;
+        return  new Price(all/100,all%100);
     }
 
     public  int getRubles(Item item){
-        return item.getPrice().rubles;
+        return item.getPrice().getRubles();
     }
     public  int getPennies(Item item){
-        return item.getPrice().pennies;
+        return item.getPrice().getPennies();
     }
 
     @Override
